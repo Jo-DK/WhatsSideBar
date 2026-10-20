@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <title>WhatsSideBar</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>WhatsSideBar</h1>
+
+    <label class="row switch">
+      <input type="checkbox" id="enabled" />
+      <span class="label">Lista recolhida</span>
+    </label>
+
+    <div class="row stack" id="width-row">
+      <div class="head">
+        <span class="label">Largura recolhida</span>
+        <output id="width-out">210px</output>
+      </div>
+      <input type="range" id="width" min="120" max="520" step="5" />
+    </div>
+
+    <label class="row switch">
+      <input type="checkbox" id="showName" />
+      <span class="label">Mostrar nome <small>(desligado = só a foto)</small></span>
+    </label>
+
+    <label class="row switch">
+      <input type="checkbox" id="hidePreview" />
+      <span class="label">Ocultar prévia da mensagem</span>
+    </label>
+
+    <label class="row switch">
+      <input type="checkbox" id="hideTime" />
+      <span class="label">Ocultar horário</span>
+    </label>
+
+    <p class="hint">
+      Na página: clique na setinha entre as duas colunas ou use
+      <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd>.
+    </p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

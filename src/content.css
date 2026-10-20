@@ -1,0 +1,176 @@
+/* WhatsSideBar — tudo aqui depende só dos atributos data-wsb-*, nunca das
+   classes ofuscadas do WhatsApp Web. */
+
+:root {
+  --wsb-edge: 0px;
+  --wsb-width: 210px;
+}
+
+/* ----------------------------------------------------------- a coluna */
+
+html[data-wsb-state="on"] [data-wsb-el="column"] {
+  width: var(--wsb-width) !important;
+  min-width: var(--wsb-width) !important;
+  max-width: var(--wsb-width) !important;
+  flex: 0 0 var(--wsb-width) !important;
+}
+
+/* senão um min-width herdado do layout do app impede o encolhimento */
+html[data-wsb-state="on"] [data-wsb-el="ancestor"] {
+  min-width: 0 !important;
+}
+
+/* ------------------------------------------------ conteúdo das linhas */
+
+/* prévia da última mensagem (o resto da linha — selo de não lidas, ícone de
+   silenciado/fixado — continua visível) */
+html[data-wsb-state="on"][data-wsb-preview="off"] [data-wsb-el="preview"] {
+  display: none !important;
+}
+html[data-wsb-state="on"][data-wsb-preview="off"] [data-wsb-el="msgrow"] {
+  justify-content: flex-end !important;
+}
+
+/* horário da última mensagem */
+html[data-wsb-state="on"][data-wsb-time="off"] [data-wsb-el="meta"] {
+  display: none !important;
+}
+
+/* modo só foto: esconde o bloco de texto inteiro e centraliza o avatar */
+html[data-wsb-state="on"][data-wsb-names="off"] [data-wsb-el="content"] {
+  display: none !important;
+}
+html[data-wsb-state="on"][data-wsb-names="off"] [data-wsb-el="rowflex"] {
+  justify-content: center !important;
+}
+
+/* --------------------------------------------- divisórias fantasma */
+
+/* O WhatsApp desenha as divisórias entre painéis numa camada sobreposta
+   (data-testid="drawer-*"), posicionada pela largura ORIGINAL da coluna — ela
+   não acompanha o colapso e sobra um tracinho de 1px boiando no meio do chat.
+   São <span> vazios; some com eles só enquanto recolhido, e só nesse nível
+   exato (> div > span), para não tocar em conteúdo de drawer de verdade. */
+html[data-wsb-state="on"] [data-testid="drawer-left"] > div > span:empty,
+html[data-wsb-state="on"] [data-testid="drawer-middle"] > div > span:empty,
+html[data-wsb-state="on"] [data-testid="drawer-right"] > div > span:empty {
+  display: none !important;
+}
+
+html[data-wsb-state="on"] [data-testid="drawer-left"],
+html[data-wsb-state="on"] [data-testid="drawer-middle"],
+html[data-wsb-state="on"] [data-testid="drawer-right"] {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ------------------------------------------------------ nossa divisória */
+
+/* Substitui a divisória original na borda nova. A cor sai do próprio token do
+   WhatsApp (--WDS-lines-divider, herdado); --wsb-line é o plano B que o JS
+   preenche lendo a divisória original, e o rgba() é o último recurso. */
+#wsb-line {
+  position: fixed;
+  left: var(--wsb-edge, 0px);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  transform: translateX(-1px);
+  background: var(--WDS-lines-divider, var(--wsb-line, rgba(11, 20, 26, 0.12)));
+  pointer-events: none;
+  z-index: 2147482999;
+  display: none;
+}
+
+html.dark #wsb-line,
+body.dark #wsb-line {
+  background: var(--WDS-lines-divider, var(--wsb-line, rgba(233, 237, 239, 0.14)));
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light) #wsb-line {
+    background: var(--WDS-lines-divider, var(--wsb-line, rgba(233, 237, 239, 0.14)));
+  }
+}
+
+html[data-wsb-state="on"] #wsb-line {
+  display: block;
+}
+
+#wsb-line[hidden] {
+  display: none !important;
+}
+
+/* ------------------------------------------------------- botão na borda */
+
+#wsb-handle {
+  position: fixed;
+  left: var(--wsb-edge);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+
+  --wsb-bg: #ffffff;
+  --wsb-fg: #54656f;
+  --wsb-border: rgba(11, 20, 26, 0.16);
+  --wsb-shadow: rgba(11, 20, 26, 0.22);
+}
+
+#wsb-handle[hidden] {
+  display: none !important;
+}
+
+html.dark #wsb-handle,
+body.dark #wsb-handle {
+  --wsb-bg: #2a3942;
+  --wsb-fg: #e9edef;
+  --wsb-border: rgba(233, 237, 239, 0.18);
+  --wsb-shadow: rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light) #wsb-handle {
+    --wsb-bg: #2a3942;
+    --wsb-fg: #e9edef;
+    --wsb-border: rgba(233, 237, 239, 0.18);
+    --wsb-shadow: rgba(0, 0, 0, 0.45);
+  }
+}
+
+#wsb-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--wsb-bg);
+  color: var(--wsb-fg);
+  border: 1px solid var(--wsb-border);
+  box-shadow: 0 1px 3px var(--wsb-shadow);
+  cursor: pointer;
+  opacity: 0.45;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+#wsb-handle:hover #wsb-btn,
+#wsb-btn:focus-visible {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+#wsb-btn svg {
+  display: block;
+  transition: transform 0.18s ease;
+}
+
+/* recolhido: a seta aponta para fora (expandir) */
+#wsb-handle[data-wsb-state="on"] #wsb-btn svg {
+  transform: rotate(180deg);
+}

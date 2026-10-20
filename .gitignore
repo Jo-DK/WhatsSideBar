@@ -1,0 +1,8 @@
+# empacotamento
+*.zip
+
+# lixo de editor / SO
+.DS_Store
+*.swp
+.idea/
+.vscode/
